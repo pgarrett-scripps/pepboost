@@ -39,8 +39,8 @@ setup(
     author="pgarrett-scripps",
     packages=find_packages(exclude=["tests", ".github"]),
     install_requires=read_requirements("requirements.txt"),
-    entry_points={
-        "console_scripts": ["pepboost = pepboost.__main__:main"]
+    package_data={
+        "pepboost.predictor.models": ["*.pkl"]
     },
     extras_require={"test": read_requirements("requirements-test.txt")},
 )

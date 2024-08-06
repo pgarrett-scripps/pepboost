@@ -1,19 +1,19 @@
 import logging
-from typing import Union, List
+from typing import Union, List, Optional
 from xgboost import XGBRegressor
 
 import numpy as np
 
-from .base import _predict, _fine_tune, _train, _uniplot, _r_squared, BasePredictor
+from .base import _predict, _fine_tune, _train, _uniplot, _r_squared, BasePredictor, load_default_model
 from .constants import DEFAULT_IM_MODEL
 
 
 class ImPredictor(BasePredictor):
 
-    def __init__(self, model: Union[str, XGBRegressor] = DEFAULT_IM_MODEL, verbose: bool = False):
+    def __init__(self, model: Optional[XGBRegressor] = None, verbose: bool = False):
 
-        if isinstance(model, str):
-            self.load_model(model)
+        if model is None:
+            self.model = load_default_model(DEFAULT_IM_MODEL)
         else:
             self.model = model
 
@@ -34,13 +34,22 @@ class ImPredictor(BasePredictor):
     @classmethod
     def train(cls, sequences: List[str],
               charges: List[int],
-              ion_mobilities: List[float]) -> XGBRegressor:
+              ion_mobilities: List[float],
+              verbose: bool = False) -> XGBRegressor:
+
+        logger = logging.getLogger('ImPredictor')
+
+        if verbose:
+            logger.setLevel(logging.INFO)
+        else:
+            logger.setLevel(logging.WARNING)
 
         model = XGBRegressor()
         return _train(model=model,
                       sequences=sequences,
                       labels=ion_mobilities,
-                      charges=charges)
+                      charges=charges,
+                      logger=logger)
 
     def fine_tune(self, sequences: List[str],
                   charges: List[int],
@@ -49,7 +58,8 @@ class ImPredictor(BasePredictor):
         return _fine_tune(model=self.model,
                           sequences=sequences,
                           labels=ion_mobilities,
-                          charges=charges)
+                          charges=charges,
+                          logger=self.logger)
 
     def uniplot(self, sequences: List[str],
                 charges: List[int],
@@ -59,7 +69,8 @@ class ImPredictor(BasePredictor):
                         sequences=sequences,
                         labels=ion_mobilities,
                         plot_name='Ion Mobility',
-                        charges=charges)
+                        charges=charges,
+                        logger=self.logger)
 
     def r_squared(self, sequences: List[str],
                   charges: List[int],
@@ -68,5 +79,5 @@ class ImPredictor(BasePredictor):
         return _r_squared(model=self.model,
                           sequences=sequences,
                           labels=ion_mobilities,
-                          charges=charges)
-
+                          charges=charges,
+                          logger=self.logger)

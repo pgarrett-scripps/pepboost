@@ -22,6 +22,7 @@ def bin_encode_sequences(sequences: List[str],
                          charges: Optional[List[int]] = None,
                          aa_index_map: Optional[Dict[str, int]] = None,
                          ignore_index_error: bool = False) -> np.ndarray:
+
     if aa_index_map is None:
         aa_index_map = AA_TO_INDEX
 
@@ -39,6 +40,7 @@ def bin_encode_sequences(sequences: List[str],
                 np_arrays[i, -1] = charges[i]
             else:
                 np_arrays[i, -1] = len(sequence)
+
         except KeyError as e:
             if ignore_index_error:
                 np_arrays[i] = np.zeros(max_len)

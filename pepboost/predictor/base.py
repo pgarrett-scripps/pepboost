@@ -5,10 +5,18 @@ import numpy as np
 from uniplot import plot_to_string
 from xgboost import XGBRegressor, XGBClassifier
 import logging
+import importlib.resources
 
 from .encoder import bin_encode_sequences
 
 BASE_LOGGER = logging.getLogger('pepboost')
+
+
+def load_default_model(filename):
+    # Access the resource within the package
+    with importlib.resources.open_binary('pepboost.predictor.models', filename) as file:
+        model = pickle.load(file)
+    return model
 
 
 def _predict(model: Union[XGBRegressor, XGBClassifier],
@@ -38,9 +46,9 @@ def _train(model: Union[XGBRegressor, XGBClassifier],
     X = bin_encode_sequences(sequences, charges, ignore_index_error=False)
 
     if isinstance(model, XGBRegressor):
-        y = np.array(labels, dtype=bool)
-    elif isinstance(model, XGBClassifier):
         y = np.array(labels, dtype=float)
+    elif isinstance(model, XGBClassifier):
+        y = np.array(labels, dtype=bool)
     else:
         raise ValueError("Model must be an instance of XGBRegressor or XGBClassifier.")
 
