@@ -12,7 +12,7 @@ from .encoder import bin_encode_sequences
 BASE_LOGGER = logging.getLogger('pepboost')
 
 
-def load_default_model(filename):
+def load_default_model(filename: str):
     # Access the resource within the package
     with importlib.resources.open_binary('pepboost.predictor.models', filename) as file:
         model = pickle.load(file)

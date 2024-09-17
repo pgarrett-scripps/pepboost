@@ -1,0 +1,27 @@
+[project]
+name = "pepboost"
+version = "0.1.0"  # Replace with actual version or dynamic method
+description = "Awesome pepboost created by pgarrett-scripps"
+readme = "README.md"
+authors = [
+    {name = "pgarrett-scripps"}
+]
+urls = { "Homepage" = "https://github.com/pgarrett-scripps/pepboost/" }
+requires-python = ">=3.7"
+dependencies = [
+    "numpy",
+    "uniplot",
+    "xgboost",
+    "scikit-learn",
+    "pandas"
+]
+
+[tool.setuptools.packages]
+find = {exclude = ["tests", ".github"]}
+
+[tool.setuptools.package-data]
+"pepboost.predictor.models" = ["pepboost/predictor/models/*.pkl"]
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"

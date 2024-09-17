@@ -28,7 +28,8 @@ def read_requirements(path):
         if not line.startswith(('"', "#", "-", "git+"))
     ]
 
-
+setup()
+"""
 setup(
     name="pepboost",
     version=read("pepboost", "VERSION"),
@@ -40,7 +41,8 @@ setup(
     packages=find_packages(exclude=["tests", ".github"]),
     install_requires=read_requirements("requirements.txt"),
     package_data={
-        "pepboost.predictor.models": ["*.pkl"]
+        "pepboost.predictor.models": ["pepboost/predictor/models/*.pkl"]
     },
     extras_require={"test": read_requirements("requirements-test.txt")},
 )
+"""
